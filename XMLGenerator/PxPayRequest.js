@@ -1,22 +1,36 @@
 var XMLbasic=require('./XMLBasics.js');
+var Validation=require('./ValidateRequest.js');
 
-
-
-var testitemlist={
-	item1:'www',
-	item2:'xxx',
-	Fullname:{
-		name:'dasith',
-		initials:'k.d'
+function Transactionrequest(info){
+	this.RequiredFeildsList=[];
+	this.GenerateRequest={GenerateRequest:info};
+	
+	this.GetXMLRequest=function(){
+		return XMLbasic.TagList(this.GenerateRequest,function (attribute, Dataobject) {
+			
+			
+			if (this.RequiredFeildsList.indexOf(attribute) !== -1){
+				
+				Validation.presencecheck(attribute, Dataobject,{validAttribute:attribute,required:true});
+			}else {
+				Validation.presencecheck(attribute,Dataobject);
+			}
+			
+		}.bind(this));
 	}
+	
 }
 //var Transactionrequest=
 
-function getxml(){
-	return XMLbasic.TagList(testitemlist);
+var RequestTest=new Transactionrequest({
+	PxPayUserId:null,
+	PxPayKey:null,
+	AmountInput:'120'
 	
-}
+});
+
+RequestTest.RequiredFeildsList=['PxPayUserId','AmountInput'];
 
 module.exports={
-	initialise:getxml
+	initialise:RequestTest.GetXMLRequest()
 };
