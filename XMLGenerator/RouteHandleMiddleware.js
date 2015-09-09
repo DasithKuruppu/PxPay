@@ -1,9 +1,10 @@
 var config=require('../config.js');
+var url = require('url');
 
 module.exports=function(req,res,next){
 	
 	
-	if(req.url===config.urls.success){
+	if(config.urls.indexOf(req.url)){
 		
 	}
 	

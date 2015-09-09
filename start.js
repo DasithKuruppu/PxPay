@@ -5,5 +5,5 @@ PxPayRequest.SendRequest(function(err,response){
 		console.log('error occured');
 		return console.log(err);
 	}
-	console.log(response);
+	console.log(response.getURI());
 });

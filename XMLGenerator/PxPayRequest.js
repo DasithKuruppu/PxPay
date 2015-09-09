@@ -4,8 +4,7 @@ var https=require('https');
 
 function Transactionrequest(info){
 	this.RequiredFeildsList=[];
-	this.GenerateRequest={GenerateRequest:info};
-	
+	this.GenerateRequest={GenerateRequest:info};	
 	this.GetXMLRequest=function(){
 		return XMLbasic.TagList(this.GenerateRequest,function (attribute, Dataobject) {
 			
@@ -19,7 +18,6 @@ function Transactionrequest(info){
 			
 		}.bind(this));
 	}
-	
 	this.SendRequest=function(callback){
 		var XML= this.GetXMLRequest(); // ensures prerequisite info is available before sending request
 		if(XML!==undefined || XML!==null){
@@ -43,8 +41,10 @@ function Transactionrequest(info){
 				});
 				
 				response.on('end', function () {
-				
-					callback(null,str);
+					var Responseobj= new responsewrapper();
+					Responseobj._XMLresponse=str;
+					
+					callback(null,Responseobj);
 				});
 				
 			});
@@ -58,7 +58,31 @@ function Transactionrequest(info){
 			console.log(XML);
 			req.end();			
 		}
+		
 	}
+	
+	var responsewrapper=function(){
+		this._XMLresponse='',
+		this.isvalid=function(){
+			if (this._XMLresponse.indexof('<Request valid="1">')!==-1){
+				return true;
+			}else {
+				return false;
+			}
+		}
+		this.getURI=function(){
+			
+			var Regex = /<URI>(.+)<\/URI>/g;
+			var match = Regex.exec(this._XMLresponse);
+			if (match!= null){
+				return match[1];
+			}else{
+				return null;
+			}
+			
+		}
+			
+	};
 	
 }
 Transactionrequest.prototype.URL='https://sec.paymentexpress.com/pxpay/pxaccess.aspx';

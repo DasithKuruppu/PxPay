@@ -1,4 +1,3 @@
-
 function createTag(tagname,data) {
 	if (tagname!== undefined || tagname !== null){
 		var starttag = '<'+tagname+'>';
